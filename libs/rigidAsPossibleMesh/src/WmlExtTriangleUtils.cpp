@@ -4,11 +4,12 @@
 #include "WmlExtTriangleUtils.h"
 
 #include <limits>
+#include <stdlib.h>
 
 using namespace Wml;
 
 template <class Real>
-void Wml::BarycentricCoords( const Vector3<Real> & vTriVtx1, 
+void Wml::BarycentricCoords( const Vector3<Real> & vTriVtx1,
 							 const Vector3<Real> & vTriVtx2,
 							 const Vector3<Real> & vTriVtx3,
 							 const Vector3<Real> & vVertex,
@@ -34,7 +35,7 @@ void Wml::BarycentricCoords( const Vector3<Real> & vTriVtx1,
 }
 
 template <class Real>
-Real Wml::Area( const Vector3<Real> & vTriVtx1, 
+Real Wml::Area( const Vector3<Real> & vTriVtx1,
 				 const Vector3<Real> & vTriVtx2,
 				 const Vector3<Real> & vTriVtx3 )
 {
@@ -42,12 +43,12 @@ Real Wml::Area( const Vector3<Real> & vTriVtx1,
 	Wml::Vector3<Real> edge2( vTriVtx3 - vTriVtx1 );
 	Wml::Vector3<Real> vCross( edge1.Cross(edge2) );
 
-	return (Real)0.5 * vCross.Length();	
+	return (Real)0.5 * vCross.Length();
 }
 
 
 template <class Real>
-void Wml::BarycentricCoords( const Vector2<Real> & vTriVtx1, 
+void Wml::BarycentricCoords( const Vector2<Real> & vTriVtx1,
 							 const Vector2<Real> & vTriVtx2,
 							 const Vector2<Real> & vTriVtx3,
 							 const Vector2<Real> & vVertex,
@@ -74,7 +75,7 @@ void Wml::BarycentricCoords( const Vector2<Real> & vTriVtx1,
 
 
 template <class Real>
-Real Wml::Area( const Vector2<Real> & vTriVtx1, 
+Real Wml::Area( const Vector2<Real> & vTriVtx1,
 				 const Vector2<Real> & vTriVtx2,
 				 const Vector2<Real> & vTriVtx3 )
 {
@@ -82,15 +83,15 @@ Real Wml::Area( const Vector2<Real> & vTriVtx1,
 	Wml::Vector2<Real> edge2( vTriVtx3 - vTriVtx1 );
 	//Real fCross( edge1.cross(edge2) );
 
-	
+
 	Real fCross = edge1.X() * edge2.Y() - edge1.Y() * edge2.X();
-	
+
 	//m_afTuple[0]*rkV.m_afTuple[1] - m_afTuple[1]*rkV.m_afTuple[0];
-	
-	
-	
-	
-	return (Real)0.5 * (Real)fabs(fCross);	
+
+
+
+
+	return (Real)0.5 * (Real)fabs(fCross);
 }
 
 
@@ -127,7 +128,7 @@ void Wml::Scale( Vector2<Real> & vTriV0,
 
 
 template <class Real>
-void Wml::StretchMetric1( const Vector3<Real> & q1, 
+void Wml::StretchMetric1( const Vector3<Real> & q1,
 						 const Vector3<Real> & q2,
 						 const Vector3<Real> & q3,
 						 const Vector2<Real> & p1,
@@ -145,9 +146,9 @@ void Wml::StretchMetric1( const Vector3<Real> & q1,
 	Real A = (Real)0.5 * ( (s2 - s1) * (t3 - t1) - (s3 - s1) * (t2 - t1));
 	if ( A > 0 ) {
 
-		Wml::Vector3<Real> Ss = 
+		Wml::Vector3<Real> Ss =
 			(q1 * (t2-t3) + q2 * (t3-t1) + q3 * (t1-t2)) / (2*A);
-		Wml::Vector3<Real> St = 
+		Wml::Vector3<Real> St =
 			(q1 * (s3-s2) + q2 * (s1-s3) + q3 * (s2-s1)) / (2*A);
 
 		Real a = Ss.Dot(Ss);
@@ -167,7 +168,7 @@ void Wml::StretchMetric1( const Vector3<Real> & q1,
 
 }
 
-template <class Real> 
+template <class Real>
 bool Wml::PtInTri2D( const Vector2<Real> & vTriVtx1,
 					 const Vector2<Real> & vTriVtx2,
 					 const Vector2<Real> & vTriVtx3,
@@ -175,9 +176,9 @@ bool Wml::PtInTri2D( const Vector2<Real> & vTriVtx1,
 {
 	int nSignSum = 0;
 
-	Wml::Vector2<Real> ve = 
+	Wml::Vector2<Real> ve =
 		Wml::Vector2<Real>( vTriVtx2[0] - vTriVtx1[0], vTriVtx2[1] - vTriVtx1[1] );
-	Wml::Vector2<Real> vp = 
+	Wml::Vector2<Real> vp =
 		Wml::Vector2<Real>( fTestX - vTriVtx1[0], fTestY - vTriVtx1[1] );
 	Real fSign = ve[0]*vp[1] - ve[1]*vp[0];
 	nSignSum += (fSign > 0) ? 1 : -1;

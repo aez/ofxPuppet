@@ -1,8 +1,10 @@
 #include "LinearAlgebra.h"
 
+#include <memory.h>
+
 using namespace rmsmesh;
 
-// Matrix Types 
+// Matrix Types
 // You cannot change these types to an enum. They are used in bit operations.
 #define MT_NONE        0
 #define MT_ROTATION    1
@@ -25,7 +27,7 @@ Matrix::Matrix()
 {
   identity();
 }
- 
+
 
 Matrix::Matrix(Matrix const & m2)
 {
@@ -33,7 +35,7 @@ Matrix::Matrix(Matrix const & m2)
 	m_type = m2.m_type;
 }
 
-Matrix & 
+Matrix &
 Matrix::operator=(Matrix const & m2)
 {
 	memcpy(m_elem, m2.m_elem, sizeof(float)*12);
@@ -47,7 +49,7 @@ Matrix::~Matrix()
 }
 
 
-void 
+void
 Matrix::identity()
 {
 	memset(m_elem, 0, sizeof(float)*12);
@@ -57,7 +59,7 @@ Matrix::identity()
 }
 
 
-void 
+void
 Matrix::transpose()
 {
 	float t;
@@ -78,7 +80,7 @@ Matrix::transpose()
 
 
 
-void 
+void
 Matrix::toScale(float sx, float sy, float sz)
 {
 	m_elem[0][0] = sx;
@@ -87,7 +89,7 @@ Matrix::toScale(float sx, float sy, float sz)
 	m_type |= MT_SCALE;
 }
 
-void 
+void
 Matrix::toTranslate(float tx, float ty, float tz)
 {
 	m_elem[0][3] = tx;
@@ -96,7 +98,7 @@ Matrix::toTranslate(float tx, float ty, float tz)
 	m_type |= MT_TRANSLATION;
 }
 
-void 
+void
 Matrix::toRotateX(float theta)
 {
 	m_elem[1][1] = (float)cos(theta);
@@ -106,14 +108,14 @@ Matrix::toRotateX(float theta)
 	m_type |= MT_ROTATION;
 }
 
-void 
+void
 Matrix::
 toRotate(float theta, float x, float y, float z)
 {
 	float c = (float)cos(theta);
 	float s = (float)sin(theta);
 	float t = 1-c;
-	  
+
 	m_elem[0][0] = t*x*x + c;
 	m_elem[0][1] = t*x*y + s*z;
 	m_elem[0][2] = t*x*z - s*y;
@@ -132,7 +134,7 @@ toRotate(float theta, float x, float y, float z)
 
 
 
-void 
+void
 Matrix::toRotateY(float theta)
 {
 	m_elem[0][0] = (float)cos(theta);
@@ -143,7 +145,7 @@ Matrix::toRotateY(float theta)
 }
 
 
-void 
+void
 Matrix::toRotateZ(float theta)
 {
 	m_elem[0][0] = (float)cos(theta);
@@ -154,7 +156,7 @@ Matrix::toRotateZ(float theta)
 }
 
 
-int 
+int
 Matrix::invert()
 {
 	switch(m_type){
@@ -186,47 +188,47 @@ Matrix::invert()
 
 
 
-void 
+void
 Matrix::multiply(const Matrix & m2)
 {
 	float t[4];
 
 	for(int i = 0; i < 3; ++i){
 		memcpy(t, m_elem[i], sizeof(float)*4);
-		m_elem[i][0] = t[0]*m2.m_elem[0][0] + 
-						t[1]*m2.m_elem[1][0] + 
+		m_elem[i][0] = t[0]*m2.m_elem[0][0] +
+						t[1]*m2.m_elem[1][0] +
 						t[2]*m2.m_elem[2][0];
 
-		m_elem[i][1] = t[0]*m2.m_elem[0][1] + 
-						t[1]*m2.m_elem[1][1] + 
+		m_elem[i][1] = t[0]*m2.m_elem[0][1] +
+						t[1]*m2.m_elem[1][1] +
 						t[2]*m2.m_elem[2][1];
 
-		m_elem[i][2] = t[0]*m2.m_elem[0][2] + 
-						t[1]*m2.m_elem[1][2] + 
+		m_elem[i][2] = t[0]*m2.m_elem[0][2] +
+						t[1]*m2.m_elem[1][2] +
 						t[2]*m2.m_elem[2][2];
 
-		m_elem[i][3] = t[0]*m2.m_elem[0][3] + 
-						t[1]*m2.m_elem[1][3] + 
+		m_elem[i][3] = t[0]*m2.m_elem[0][3] +
+						t[1]*m2.m_elem[1][3] +
 						t[2]*m2.m_elem[2][3] + t[3];
   }
 }
 
 
-Vector & 
+Vector &
 Matrix::multiply(const Vector  & v, Vector & dest) const
 {
 	dest.init( v.dot4(m_elem[0]), v.dot4(m_elem[1]), v.dot4(m_elem[2]) );
 	return dest;
 }
 
-rmsmesh::Point & 
+rmsmesh::Point &
 Matrix::multiply(const rmsmesh::Point & v, rmsmesh::Point & dest) const
 {
 	dest.init( v.dot4(m_elem[0]), v.dot4(m_elem[1]), v.dot4(m_elem[2]) );
 	return dest;
 }
 
-void 
+void
 Matrix::multiply(float * vec)
 {
   float t[4];
@@ -241,7 +243,7 @@ string
 Matrix::toString() const
 {
 	char buf[256];
-    sprintf(buf, "[ %5.5f %5.5f %5.5f %5.5f]\n[ %5.5f %5.5f %5.5f %5.5f]\n[ %5.5f %5.5f %5.5f %5.5f]\n", 
+    sprintf(buf, "[ %5.5f %5.5f %5.5f %5.5f]\n[ %5.5f %5.5f %5.5f %5.5f]\n[ %5.5f %5.5f %5.5f %5.5f]\n",
 			 m_elem[0][0], m_elem[0][1], m_elem[0][2], m_elem[0][3],
 			 m_elem[1][0], m_elem[1][1], m_elem[1][2], m_elem[1][3],
 			 m_elem[2][0], m_elem[2][1], m_elem[2][2], m_elem[2][3] );
@@ -261,7 +263,7 @@ Transformation::~Transformation()
 }
 
 
-bool 
+bool
 Transformation::addMatrix(const Matrix & m)
 {
   Matrix minverse(m);
@@ -273,8 +275,8 @@ Transformation::addMatrix(const Matrix & m)
   ml_current_inverse = minverse;
   return true;
 }
-  
-bool 
+
+bool
 Transformation::addMatrixPremultiply(const Matrix & m)
 {
   Matrix minverse(m);

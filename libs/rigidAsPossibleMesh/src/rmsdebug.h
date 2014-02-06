@@ -12,18 +12,19 @@
 using namespace std;
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
 
 #ifndef ASSERT
 #ifdef _DEBUG
 #define ASSERT(x)  { if(! (x) ) abort(); }
 #else
-#define ASSERT(x) 
+#define ASSERT(x)
 #endif
 #endif
 
 static void _RMSInfo(char * str, ...)
-{	
+{
 	static char buf[1024];
 	va_list args;
 
@@ -38,7 +39,7 @@ static void _RMSInfo(char * str, ...)
 }
 
 static string _RMSInfoString(char * str, ...)
-{	
+{
 	static char buf[1024];
 	va_list args;
 
@@ -70,15 +71,15 @@ static void Debugbreak() {
 
 
 static char _RMSDEBUG_GLErrorStrings[][32] = {  "GL_NO_ERROR",
-												"GL_INVALID_ENUM", 
-												"GL_INVALID_VALUE", 
-												"GL_INVALID_OPERATION", 
+												"GL_INVALID_ENUM",
+												"GL_INVALID_VALUE",
+												"GL_INVALID_OPERATION",
 												"GL_STACK_OVERFLOW",
 												"GL_STACK_UNDERFLOW",
 												"GL_OUT_OF_MEMORY",
 												"Unknown GL Error"};
 
-static char * glErrorString(GLenum error) 
+static char * glErrorString(GLenum error)
 {
 	switch(error) {
 		case GL_NO_ERROR: return _RMSDEBUG_GLErrorStrings[0];
